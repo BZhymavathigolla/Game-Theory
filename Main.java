@@ -2,14 +2,14 @@ import java.util.*;
 
 /**
  * Marvel Tic-Tac-Toe:
- * THOR = X (MAX)
+ * THANOS = X (MAX)
  * CAPTAIN = O (MIN)
  *
- * Thor  goes first and uses minimax (perfect play).
- * Captain tries to minimize Thor's score.
+ * Thanos goes first and uses minimax (perfect play).
+ * Captain tries to minimize Thanos's score.
  *
  * Minimax scores:
- *   +1 -> Thor (X) will win from this state (good for Thor)
+ *   +1 -> Thanos (X) will win from this state (good for Thanos)
  *    0 -> Draw with perfect play
  *   -1 -> Captain (O) will win from this state (good for Captain)
  *
@@ -17,8 +17,8 @@ import java.util.*;
  */
 public class Main {
 
-    static final char THOR = 'X';     // MAX 
-    static final char CAPTAIN = 'O';  // MIN 
+    static final char THANOS = 'X';     // MAX 
+    static final char CAPTAIN = 'O';    // MIN 
     static final char EMPTY = ' ';
 
     static char[][] board = {
@@ -40,13 +40,13 @@ public class Main {
         welcome();
         printBoard();
 
-        // Thor goes first
+        // Thanos goes first
         while (true) {
-            thorMove();         // Thor (MAX) plays using minimax
+            thanosMove();        
             printBoard();
             if (gameOver()) break;
 
-            captainMove();      // Captain (MIN) by recommendations
+            captainMove();      
             printBoard();
             if (gameOver()) break;
         }
@@ -56,13 +56,13 @@ public class Main {
 
     static void welcome() {
         System.out.println("⚡ Welcome to the Marvel Battle Arena! ⚡");
-        System.out.println("THOR  v/s  CAPTAIN AMERICA");
-        System.out.println("Thor goes first (he's powerful and thinks ahead!).\n");
+        System.out.println("THANOS  v/s  CAPTAIN AMERICA");
+        System.out.println("Thanos goes first (he's powerful and thinks ahead!).\n");
     }
 
-    // Thor's turn: perfect minimax (MAX). Tie-broken randomly.
-    static void thorMove() {
-        System.out.println("\n⚡ THOR's turn...");
+    // Thanos's turn: perfect minimax (MAX). Tie-broken randomly.
+    static void thanosMove() {
+        System.out.println("\n⚡ THANOS's turn...");
 
         List<Move> bestMoves = new ArrayList<>();
         int bestScore = Integer.MIN_VALUE;
@@ -70,8 +70,8 @@ public class Main {
         for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
                 if (board[r][c] == EMPTY) {
-                    board[r][c] = THOR;
-                    int score = minimax(false); // after Thor moves, it's MIN's turn
+                    board[r][c] = THANOS;
+                    int score = minimax(false);
                     board[r][c] = EMPTY;
 
                     if (score > bestScore) {
@@ -85,25 +85,24 @@ public class Main {
             }
         }
 
-        // pick one best move (random tie-break)
         Move pick = bestMoves.get(rand.nextInt(bestMoves.size()));
-        board[pick.r][pick.c] = THOR;
-        System.out.println("⚡ THOR strikes at: " + pick);
+        board[pick.r][pick.c] = THANOS;
+        System.out.println("⚡ THANOS strikes at: " + pick);
     }
 
-    // Captain's turn: show recommended moves (those that minimize Thor's score).
+    // Captain's turn
     static void captainMove() {
         System.out.println("\n🛡 CAPTAIN AMERICA! Your turn... Minimax is analyzing options...");
 
-        List<Move> winningForCaptain = new ArrayList<>(); // moves with score == -1
-        List<Move> drawingMoves = new ArrayList<>();      // moves with score == 0
+        List<Move> winningForCaptain = new ArrayList<>();
+        List<Move> drawingMoves = new ArrayList<>();
         List<Move> allMoves = new ArrayList<>();
 
         for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
                 if (board[r][c] == EMPTY) {
                     board[r][c] = CAPTAIN;
-                    int score = minimax(true); // after Captain moves, it's MAX's turn
+                    int score = minimax(true);
                     board[r][c] = EMPTY;
 
                     Move m = new Move(r, c);
@@ -114,7 +113,6 @@ public class Main {
             }
         }
 
-        // Print recommendations (best-first: winning moves for Captain, then draws, then others)
         if (!winningForCaptain.isEmpty()) {
             System.out.println("Recommended moves (lead to CAPTAIN win if played perfectly):");
             printMoveList(winningForCaptain);
@@ -122,11 +120,10 @@ public class Main {
             System.out.println("No immediate winning move. Recommended draws (force at least a draw):");
             printMoveList(drawingMoves);
         } else {
-            System.out.println("No guaranteed win/draw — choose any move (Thor may force a win):");
+            System.out.println("No guaranteed win/draw — choose any move (Thanos may force a win):");
             printMoveList(allMoves);
         }
 
-        // Accept user choice robustly
         int choice = -1;
         List<Move> offered = !winningForCaptain.isEmpty() ? winningForCaptain
                          : !drawingMoves.isEmpty() ? drawingMoves
@@ -139,9 +136,7 @@ public class Main {
             try {
                 choice = Integer.parseInt(line);
                 if (choice >= 0 && choice < offered.size()) break;
-            } catch (NumberFormatException e) {
-                // fallthrough
-            }
+            } catch (NumberFormatException e) {}
             System.out.println("Invalid input. Try again.");
         }
 
@@ -156,53 +151,30 @@ public class Main {
         }
     }
 
-    // Minimax function: returns +1 if THOR wins from this state, -1 if CAPTAIN wins, 0 draw.
-    // isThorTurn tells whose turn it is in the simulated state.
-    static int minimax(boolean isThorTurn) {
+    static int minimax(boolean isThanosTurn) {
         Character res = checkWinner();
         if (res != null) {
-            if (res == THOR) return +1;
+            if (res == THANOS) return +1;
             if (res == CAPTAIN) return -1;
-            return 0; // draw
+            return 0;
         }
 
-        if (isThorTurn) { // MAX player
+        if (isThanosTurn) {
             int best = Integer.MIN_VALUE;
 
-
-
-
-          
             //Write your logic here
 
-
-
-
-
-          
             return best;
-        } else { // CAPTAIN (MIN)
+        } else {
             int best = Integer.MAX_VALUE;
 
-
-
-
-          
             //Write your logic here
 
-
-
-
-
-          
             return best;
         }
     }
 
-    // Check winner or draw:
-    // returns 'X' or 'O' if a player wins, 'D' if draw, or null if game continues
     static Character checkWinner() {
-        // rows & cols
         for (int i = 0; i < 3; i++) {
             if (board[i][0] != EMPTY &&
                 board[i][0] == board[i][1] &&
@@ -213,7 +185,6 @@ public class Main {
                 board[1][i] == board[2][i]) return board[0][i];
         }
 
-        // diagonals
         if (board[0][0] != EMPTY &&
             board[0][0] == board[1][1] &&
             board[1][1] == board[2][2]) return board[0][0];
@@ -222,24 +193,23 @@ public class Main {
             board[0][2] == board[1][1] &&
             board[1][1] == board[2][0]) return board[0][2];
 
-        // any empty cell?
         for (int r = 0; r < 3; r++)
             for (int c = 0; c < 3; c++)
                 if (board[r][c] == EMPTY) return null;
 
-        return 'D'; // draw
+        return 'D';
     }
 
     static boolean gameOver() {
         Character res = checkWinner();
         if (res == null) return false;
 
-        if (res == THOR) {
-            System.out.println("\n⚡ THOR WINS! Heaped lightning victory! ⚡");
+        if (res == THANOS) {
+            System.out.println("\n⚡ THANOS WINS! Perfectly balanced victory! ⚡");
         } else if (res == CAPTAIN) {
             System.out.println("\n🛡 CAPTAIN AMERICA WINS! Freedom prevails! 🛡");
         } else {
-            System.out.println("\n🤝 It's a DRAW. You stopped World War.");
+            System.out.println("\n🤝 It's a DRAW. Peace is restored.");
         }
         return true;
     }
